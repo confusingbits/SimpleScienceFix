@@ -20,7 +20,6 @@ namespace SimpleScienceFix
                     exp.ResetExperiment();
                     explist.Clear();
                 }
-                Debug.Log(exp.experimentID);
             }
         }
 
