@@ -6,19 +6,32 @@ using UnityEngine;
 namespace SimpleScienceFix
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    public class SimpleScienceFix :MonoBehaviour
+    public class SimpleScienceFix : MonoBehaviour
     {
         private void Update()
         {
-            foreach (ModuleScienceExperiment exp in FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleScienceExperiment>())
+            if (FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleScienceExperiment>() != null)
             {
-                if (exp.experimentID == "crewReport" | exp.experimentID == "surfaceSample" | exp.experimentID == "evaReport")
+                foreach (ModuleScienceExperiment exp in FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleScienceExperiment>())
                 {
-                    List<ModuleScienceExperiment> explist = new List<ModuleScienceExperiment>();
-                    explist.Add(exp);
-                    exp.part.Modules.GetModules<ModuleScienceContainer>()[0].StoreData(explist.Cast<IScienceDataContainer>().ToList(), true);
-                    exp.ResetExperiment();
-                    explist.Clear();
+                    if (exp.experimentID == "crewReport" | exp.experimentID == "surfaceSample" | exp.experimentID == "evaReport")
+                    {
+                        if (exp.part.FindModuleImplementing<ModuleScienceContainer>() != null)
+                        {
+                            if (exp.GetData() != null)
+                            {
+                                foreach (ScienceData data in exp.GetData())
+                                {
+                                    List<ModuleScienceExperiment> explist = new List<ModuleScienceExperiment>();
+                                    explist.Add(exp);
+                                    if (exp.part.FindModuleImplementing<ModuleScienceContainer>().HasData(data) == false)
+                                        exp.part.FindModuleImplementing<ModuleScienceContainer>().StoreData(explist.Cast<IScienceDataContainer>().ToList(), true);
+                                    explist.Clear();
+                                    exp.ResetExperiment();
+                                } 
+                            }
+                        }
+                    }
                 }
             }
         }

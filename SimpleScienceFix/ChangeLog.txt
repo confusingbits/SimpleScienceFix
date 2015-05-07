@@ -1,2 +1,5 @@
-v 1.0 - First Release
-- Automaticly store surface samples, crew reports and eva reports into thier part's science container.'
+v1.1 - Fix Duplicate entries on EVA.
+- Resolved an issue where duplicate surface samples and eva reports would be stored each time the experiment was activated.
+
+v1.0 - First Release
+- Automatically store surface samples, crew reports and eva reports into their part's science container.
